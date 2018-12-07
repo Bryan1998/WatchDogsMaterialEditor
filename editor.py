@@ -23,8 +23,8 @@ def readxml(f):
 def readmat(filename):
     with open(filename, mode='rb') as file: # b is important -> binary
         file.seek(0x48)
-        name = file.read(0x17).decode('ascii', errors='ignore')
-        return name
+        name = file.read(0x17).rstrip(b'\0').decode('ascii', errors='ignore')
+        return re.sub(r'[^\w]', '', name)
 
 
 window = Tk()
