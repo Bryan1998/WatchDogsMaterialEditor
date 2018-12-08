@@ -23,6 +23,7 @@ def readxml(f):
     return parameters[0]
 
 def readmat(filename):
+    global shader
     with open(filename, mode='rb') as file:
         file.seek(0x48)
         name = file.read(0x17).rstrip(b'\0').decode('ascii', errors='ignore')
@@ -33,32 +34,17 @@ def readmat(filename):
         shader = re.sub(r'[^\w=]', '', shader)
     return [name, shader]
 
-    #for
-
-def btn(t):
-    global file, type
-    if t == "bin":
-        file = filedialog.askopenfilename(initialdir = ".", title = "Select file", filetypes = (("Watch Dogs Material File", ".material.bin"),))
-        type = "bin"
-    elif t == "xml":
-        file = filedialog.askopenfilename(initialdir = ".", title = "Select file", filetypes = (("XML File", "*.xml"),))
-        type = "xml"
-    else:
-        pass
+def btn():
+    global matfile, matfolder
+    matfile = filedialog.askopenfilename(initialdir = ".", title = "Select file", filetypes = (("Watch Dogs Material File", ".material.bin"),))
+    matfolder = filedialog.askdirectory(initialdir = ".", title = "Select directory")
 
 window = Tk()
 
-btn_bin = Button(window, text=".material.bin", command=lambda: btn("bin"))
-btn_bin.grid(column=0, row=0)
-
-btn_xml = Button(window, text="materialdescriptor.xml", command=lambda: btn("xml"))
-btn_xml.grid(column=1, row=0)
+btn_mat = Button(window, text="Open Files", command=btn)
+btn_mat.grid(column=0, row=0)
 
 window.mainloop()
 
-if type == "bin":
-    print(readmat(file))
-elif type == "xml":
-    print(readxml(file))
-else:
-    print("Whoops!  Something isn't right...")
+print(readmat(matfile))
+print(readxml(matfolder + '/' + shader + '.xml'))
